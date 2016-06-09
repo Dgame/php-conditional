@@ -1,10 +1,13 @@
 <?php
 
-require_once '../vendor/autoload.php';
-
-use function Dgame\Conditional\debug;
+use Dgame\Conditional\Browser;
 use Dgame\Conditional\OS;
-use function Dgame\Conditional\version;
+use Dgame\Conditional\Version;
+use Dgame\Conditional\Version\BrowserVersion;
+use function Dgame\Conditional\condition;
+use function Dgame\Conditional\debug;
+
+require_once '../vendor/autoload.php';
 
 final class TestConditional extends PHPUnit_Framework_TestCase
 {
@@ -14,20 +17,25 @@ final class TestConditional extends PHPUnit_Framework_TestCase
         debug('test')->disable();
         debug('test')->enable();
 
-        version('test')->output('Hallo');
-        version('test')->output(['foo' => 'bar']);
-        version('test')->output(['bar' => 'foo']);
+        condition('test')->output('Hallo');
+        condition('test')->output(['foo' => 'bar']);
+        condition('test')->output(['bar' => 'foo']);
 
-        version(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
-        Dgame\Conditional\Version::Windows()->output('Predefined: Windows');
-        Dgame\Conditional\Version::Localhost()->output('you are on localhost');
-        Dgame\Conditional\Version::Console()->output('you are on a console');
-        Dgame\Conditional\Version::X86()->output('32 bit');
-        Dgame\Conditional\Version::X86_64()->output('64 bit');
-        version(OS::Is('Windows', Dgame\Conditional\Version::X86))->output('Windows, 32 Bit');
-        Dgame\Conditional\Version::Windows(Dgame\Conditional\Version::X86)->output('Predefined: Windows, 32 Bit');
-        Dgame\Conditional\Version::PHP('7.*')->output('You are on PHP 7');
-        version(true)->output('always debug this');
-        version(false)->output('never debug this');
+        condition(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
+        Version::Windows()->output('Predefined: Windows');
+        Version::Localhost()->output('you are on localhost');
+        Version::Console()->output('you are on a console');
+        Version::X86()->output('32 bit');
+        Version::X86_64()->output('64 bit');
+        condition(OS::Is('Windows', Version::X86))->output('Windows, 32 Bit');
+        Version::Windows(Version::X86)->output('Predefined: Windows, 32 Bit');
+        Version::PHP('7.*')->output('You are on PHP 7');
+        condition(true)->output('always debug this');
+        condition(false)->output('never debug this');
+
+        Version::Chrome()->output('You are on Chrome');
+
+        $bv = new BrowserVersion(Browser::CHROME);
+        $bv->version('49')->conditional()->output('You are on Chrome 49');
     }
 }

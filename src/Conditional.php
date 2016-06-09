@@ -2,7 +2,7 @@
 
 namespace Dgame\Conditional;
 
-use Dgame\Conditional\Info\Info;
+use Dgame\Conditional\Info\EnvironmentInfo;
 use Dgame\Conditional\Version\BooleanVersion;
 
 /**
@@ -45,15 +45,15 @@ final class Conditional
     /**
      * @param $value
      *
-     * @return $this
+     * @return Conditional
      */
-    public function output($value)
+    public function output($value) : Conditional
     {
         if (!$this->version->isValid()) {
             return $this;
         }
 
-        if (Info::Instance()->isOnConsole()) {
+        if (EnvironmentInfo::Instance()->isOnConsole()) {
             print PHP_EOL;
         } else {
             print '<pre>';
@@ -65,7 +65,7 @@ final class Conditional
             var_dump($value);
         }
 
-        if (Info::Instance()->isOnConsole()) {
+        if (EnvironmentInfo::Instance()->isOnConsole()) {
             print PHP_EOL;
         } else {
             print '</pre>';
@@ -77,9 +77,9 @@ final class Conditional
     /**
      * @param callable $callback
      *
-     * @return $this
+     * @return Conditional
      */
-    public function do(callable $callback)
+    public function do(callable $callback) : Conditional
     {
         if ($this->version->isValid()) {
             $callback();
@@ -89,9 +89,9 @@ final class Conditional
     }
 
     /**
-     * @return $this
+     * @return Conditional
      */
-    public function abort()
+    public function abort() : Conditional
     {
         if ($this->version->isValid()) {
             exit;
@@ -103,10 +103,10 @@ final class Conditional
     /**
      * @param \Exception $e
      *
-     * @return $this
+     * @return Conditional
      * @throws \Exception
      */
-    public function throw(\Exception $e)
+    public function throw(\Exception $e) : Conditional
     {
         if ($this->version->isValid()) {
             throw $e;

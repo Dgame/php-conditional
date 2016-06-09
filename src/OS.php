@@ -3,7 +3,8 @@
 namespace Dgame\Conditional;
 
 use Dgame\Conditional\Exception\UnknownOSException;
-use Dgame\Conditional\Info\Info;
+use Dgame\Conditional\Info\EnvironmentInfo;
+use Dgame\Conditional\Info\OSInfo;
 
 /**
  * Class OS
@@ -13,6 +14,7 @@ final class OS
 {
     const WINDOWS = 'Windows';
     const LINUX   = 'Linux';
+    const OSX     = 'Darwin';
 
     /**
      * @var OS[]
@@ -39,7 +41,7 @@ final class OS
      */
     public static function Is(string $name, int $bit = null) : bool
     {
-        $os = Info::Instance()->getCurrentOS();
+        $os = OSInfo::Instance()->getCurrentOS();
 
         if ($bit === null) {
             return $name === $os->getName();

@@ -3,8 +3,10 @@
 namespace Dgame\Conditional;
 
 use Dgame\Conditional\Exception\NotSupportedException;
-use Dgame\Conditional\Info\Info;
+use Dgame\Conditional\Info\EnvironmentInfo;
+use Dgame\Conditional\Info\OSInfo;
 use Dgame\Conditional\Version\BooleanVersion;
+use Dgame\Conditional\Version\BrowserVersion;
 use Dgame\Conditional\Version\OSVersion;
 use Dgame\Conditional\Version\PHPVersion;
 use Dgame\Conditional\Version\UserVersion;
@@ -25,7 +27,9 @@ abstract class Version
      */
     public static function OS(OS $os) : Conditional
     {
-        return new Conditional(OSVersion::Instance($os));
+        $version = OSVersion::Instance($os);
+
+        return $version->conditional();
     }
 
     /**
@@ -35,7 +39,7 @@ abstract class Version
      */
     public static function Windows(int $bit = null) : Conditional
     {
-        $bit = $bit === null ? Info::Instance()->getCurrentOS()->getBitAsInt() : $bit;
+        $bit = $bit === null ? OSInfo::Instance()->getCurrentOS()->getBitAsInt() : $bit;
         $os  = OS::Instance(OS::WINDOWS, $bit);
 
         return self::OS($os);
@@ -48,8 +52,21 @@ abstract class Version
      */
     public static function Linux(int $bit = null) : Conditional
     {
-        $bit = $bit === null ? Info::Instance()->getCurrentOS()->getBitAsInt() : $bit;
+        $bit = $bit === null ? OSInfo::Instance()->getCurrentOS()->getBitAsInt() : $bit;
         $os  = OS::Instance(OS::LINUX, $bit);
+
+        return self::OS($os);
+    }
+
+    /**
+     * @param int|null $bit
+     *
+     * @return Conditional
+     */
+    public static function OSX(int $bit = null) : Conditional
+    {
+        $bit = $bit === null ? OSInfo::Instance()->getCurrentOS()->getBitAsInt() : $bit;
+        $os  = OS::Instance(OS::OSX, $bit);
 
         return self::OS($os);
     }
@@ -59,7 +76,7 @@ abstract class Version
      */
     public static function X86() : Conditional
     {
-        $name = Info::Instance()->getCurrentOS()->getName();
+        $name = OSInfo::Instance()->getCurrentOS()->getName();
         $os   = OS::Instance($name, self::X86);
 
         return self::OS($os);
@@ -70,7 +87,7 @@ abstract class Version
      */
     public static function X86_64() : Conditional
     {
-        $name = Info::Instance()->getCurrentOS()->getName();
+        $name = OSInfo::Instance()->getCurrentOS()->getName();
         $os   = OS::Instance($name, self::X86_64);
 
         return self::OS($os);
@@ -83,7 +100,9 @@ abstract class Version
      */
     public static function PHP(string $version) : Conditional
     {
-        return new Conditional(PHPVersion::Instance($version));
+        $version = PHPVersion::Instance($version);
+
+        return $version->conditional();
     }
 
     /**
@@ -93,7 +112,9 @@ abstract class Version
      */
     public static function Is(bool $condition) : Conditional
     {
-        return new Conditional(new BooleanVersion($condition));
+        $version = new BooleanVersion($condition);
+
+        return $version->conditional();
     }
 
     /**
@@ -101,7 +122,7 @@ abstract class Version
      */
     public static function Localhost() : Conditional
     {
-        return self::Is(Info::Instance()->isOnLocalhost());
+        return self::Is(EnvironmentInfo::Instance()->isOnLocalhost());
     }
 
     /**
@@ -109,7 +130,75 @@ abstract class Version
      */
     public static function Console() : Conditional
     {
-        return self::Is(Info::Instance()->isOnConsole());
+        return self::Is(EnvironmentInfo::Instance()->isOnConsole());
+    }
+
+    /**
+     * @param string $browser
+     *
+     * @return Conditional
+     */
+    public static function Browser(string $browser) : Conditional
+    {
+        $version = new BrowserVersion($browser);
+
+        return $version->conditional();
+    }
+
+    /**
+     * @return Conditional
+     */
+    public static function Firefox() : Conditional
+    {
+        return self::Browser(Browser::FIREFOX);
+    }
+
+    /**
+     * @return Conditional
+     */
+    public static function MSIE() : Conditional
+    {
+        return self::Browser(Browser::MSIE);
+    }
+
+    /**
+     * @return Conditional
+     */
+    public static function Chrome() : Conditional
+    {
+        return self::Browser(Browser::CHROME);
+    }
+
+    /**
+     * @return Conditional
+     */
+    public static function Safari() : Conditional
+    {
+        return self::Browser(Browser::SAFARI);
+    }
+
+    /**
+     * @return Conditional
+     */
+    public static function Opera() : Conditional
+    {
+        return self::Browser(Browser::OPERA);
+    }
+
+    /**
+     * @return Conditional
+     */
+    public static function Netscape() : Conditional
+    {
+        return self::Browser(Browser::NETSCAPE);
+    }
+
+    /**
+     * @return Conditional
+     */
+    final public function conditional() : Conditional
+    {
+        return new Conditional($this);
     }
 
     /**
@@ -124,7 +213,7 @@ abstract class Version
  * @return Conditional
  * @throws NotSupportedException
  */
-function version($value) : Conditional
+function condition($value) : Conditional
 {
     if (is_bool($value)) {
         return Version::Is($value);
