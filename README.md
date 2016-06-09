@@ -33,7 +33,7 @@ you can also use an optional else-part, just in case:
 condition(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
 ```
 
-and you use `condition` with boolean-conditions
+and you can use `condition` with boolean-conditions
 
 ```php
 condition(true)->output('always debug this');
