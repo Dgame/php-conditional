@@ -18,6 +18,7 @@ condition('test')->output(['foo' => 'bar']);
 condition('test')->output(['bar' => 'foo']);
 
 condition(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
+condition(OS::Is('Linux'))->output('Linux')->otherwise()->output('Not Linux.');
 Version::Windows()->output('Predefined: Windows');
 Version::Localhost()->output('you are on localhost');
 Version::Console()->output('you are on a console');
