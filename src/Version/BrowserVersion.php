@@ -67,7 +67,7 @@ final class BrowserVersion extends Version
             return false;
         }
 
-        if ($browser->hasVersion() && $current->matchVersion($browser->getVersion())) {
+        if ($browser->hasVersion() && !$current->matchVersion($browser->getVersion())) {
             return false;
         }
 

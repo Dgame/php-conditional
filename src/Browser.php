@@ -174,8 +174,8 @@ final class Browser
      */
     public function matchVersion(string $version) : bool
     {
-        $pattern = sprintf('#^%s$#', $version);
+        $pattern = sprintf('#^%s#', $version);
 
-        return preg_match($pattern, $this->version);
+        return preg_match($pattern, $this->version) === 1;
     }
 }
