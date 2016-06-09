@@ -14,20 +14,20 @@ final class TestConditional extends PHPUnit_Framework_TestCase
         debug('test')->disable();
         debug('test')->enable();
 
-        version('test')->debug('Hallo');
-        version('test')->debug(['foo' => 'bar']);
-        version('test')->debug(['bar' => 'foo']);
+        version('test')->output('Hallo');
+        version('test')->output(['foo' => 'bar']);
+        version('test')->output(['bar' => 'foo']);
 
-        version(OS::Is('Windows'))->debug('Windows')->otherwise()->debug('Not Windows.');
-        Dgame\Conditional\Version::Windows()->debug('Predefined: Windows');
-        Dgame\Conditional\Version::Localhost()->debug('you are on localhost');
-        Dgame\Conditional\Version::Console()->debug('you are on a console');
-        Dgame\Conditional\Version::X86()->debug('32 bit');
-        Dgame\Conditional\Version::X86_64()->debug('64 bit');
-        version(OS::Is('Windows', Dgame\Conditional\Version::X86))->debug('Windows, 32 Bit');
-        Dgame\Conditional\Version::Windows(Dgame\Conditional\Version::X86)->debug('Predefined: Windows, 32 Bit');
-        Dgame\Conditional\Version::PHP('7.*')->debug('You are on PHP 7');
-        version(true)->debug('always debug this');
-        version(false)->debug('never debug this');
+        version(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
+        Dgame\Conditional\Version::Windows()->output('Predefined: Windows');
+        Dgame\Conditional\Version::Localhost()->output('you are on localhost');
+        Dgame\Conditional\Version::Console()->output('you are on a console');
+        Dgame\Conditional\Version::X86()->output('32 bit');
+        Dgame\Conditional\Version::X86_64()->output('64 bit');
+        version(OS::Is('Windows', Dgame\Conditional\Version::X86))->output('Windows, 32 Bit');
+        Dgame\Conditional\Version::Windows(Dgame\Conditional\Version::X86)->output('Predefined: Windows, 32 Bit');
+        Dgame\Conditional\Version::PHP('7.*')->output('You are on PHP 7');
+        version(true)->output('always debug this');
+        version(false)->output('never debug this');
     }
 }

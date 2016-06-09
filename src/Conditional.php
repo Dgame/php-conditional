@@ -47,7 +47,7 @@ final class Conditional
      *
      * @return $this
      */
-    public function debug($value)
+    public function output($value)
     {
         if (!$this->version->isValid()) {
             return $this;
@@ -59,7 +59,11 @@ final class Conditional
             print '<pre>';
         }
 
-        print_r($value);
+        if (is_array($value) || is_object($value)) {
+            print_r($value);
+        } else {
+            var_dump($value);
+        }
 
         if (Info::Instance()->isOnConsole()) {
             print PHP_EOL;
