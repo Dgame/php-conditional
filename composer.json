@@ -1,0 +1,30 @@
+{
+    "name": "php-conditional",
+    "description": "php conditional",
+    "license": "MIT",
+    "type": "library",
+    "homepage": "https://github.com/php-conditional",
+    "authors": [
+        {
+            "name": "Randy Schütt",
+            "email": "rswhite4@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.*.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ],
+        "files": [
+            "src/Version.php"
+        ],
+        "psr-4": {
+            "Dgame\\Conditional\\": "src/"
+        }
+    }
+}
