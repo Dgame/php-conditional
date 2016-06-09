@@ -47,7 +47,7 @@ Detect your current Browser (if any)
 Version::Chrome()->output('You are on Chrome');
 ```
 
-or a bit more specify -  with the browser version
+or a bit more specific -  with the browser version
 ```php
 $bv = new BrowserVersion(Browser::CHROME);
 $bv->version('49')->conditional()->output('You are on Chrome 49');
