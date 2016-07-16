@@ -2,12 +2,13 @@
 
 use Dgame\Conditional\OS;
 use Dgame\Conditional\Version;
+use PHPUnit\Framework\TestCase;
 use function Dgame\Conditional\condition;
 use function Dgame\Conditional\debug;
 
 require_once '../vendor/autoload.php';
 
-final class TestConditional extends PHPUnit_Framework_TestCase
+final class TestConditional extends TestCase
 {
     public function testEnableUserVersion()
     {

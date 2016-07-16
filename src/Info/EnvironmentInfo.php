@@ -2,9 +2,6 @@
 
 namespace Dgame\Conditional\Info;
 
-use Dgame\Conditional\OS;
-use Dgame\Conditional\Version;
-
 /**
  * Class Info
  * @package Dgame\Conditional\Info
@@ -29,7 +26,7 @@ final class EnvironmentInfo
      */
     private function __construct()
     {
-        if (array_key_exists('argv', $_SERVER)) {
+        if (php_sapi_name() === 'cli' || defined('STDIN')) {
             $this->info[self::CONSOLE] = true;
             $this->info[self::LOCAL]   = false;
         } else {

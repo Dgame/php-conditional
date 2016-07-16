@@ -3,7 +3,6 @@
 namespace Dgame\Conditional;
 
 use Dgame\Conditional\Exception\UnknownOSException;
-use Dgame\Conditional\Info\EnvironmentInfo;
 use Dgame\Conditional\Info\OSInfo;
 
 /**
