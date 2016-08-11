@@ -4,6 +4,15 @@
     "license": "MIT",
     "type": "library",
     "homepage": "https://github.com/php-conditional",
+    "keywords": [
+        "Conditional",
+        "Version",
+        "Identification",
+        "Browser",
+        "OS",
+        "Info",
+        "Enviroment"
+    ],
     "authors": [
         {
             "name": "Randy Schütt",
