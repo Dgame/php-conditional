@@ -2,240 +2,249 @@
 
 namespace Dgame\Conditional;
 
-use Dgame\Conditional\Exception\NotSupportedException;
-use Dgame\Conditional\Info\EnvironmentInfo;
-use Dgame\Conditional\Info\OSInfo;
-use Dgame\Conditional\Version\BooleanVersion;
-use Dgame\Conditional\Version\BrowserVersion;
-use Dgame\Conditional\Version\OSVersion;
-use Dgame\Conditional\Version\PHPVersion;
-use Dgame\Conditional\Version\UserVersion;
-
 /**
  * Class Version
  * @package Dgame\Conditional
  */
-abstract class Version
+final class Version
 {
-    const X86    = 32;
-    const X86_64 = 64;
+    /**
+     * @var Version[]
+     */
+    private static $instances = [];
+    /**
+     * @var string
+     */
+    private $version;
+    /**
+     * @var bool
+     */
+    private $verified = false;
 
     /**
-     * @param OS $os
+     * Debug constructor.
      *
-     * @return Conditional
+     * @param string $version
      */
-    public static function OS(OS $os) : Conditional
+    private function __construct(string $version)
     {
-        $version = OSVersion::Instance($os);
-
-        return $version->conditional();
+        $this->version = $version;
     }
 
     /**
-     * @param int|null $bit
      *
-     * @return Conditional
      */
-    public static function Windows(int $bit = null) : Conditional
+    private function __clone()
     {
-        $bit = $bit === null ? OSInfo::Instance()->getCurrentOS()->getBitAsInt() : $bit;
-        $os  = OS::Instance(OS::WINDOWS, $bit);
-
-        return self::OS($os);
-    }
-
-    /**
-     * @param int|null $bit
-     *
-     * @return Conditional
-     */
-    public static function Linux(int $bit = null) : Conditional
-    {
-        $bit = $bit === null ? OSInfo::Instance()->getCurrentOS()->getBitAsInt() : $bit;
-        $os  = OS::Instance(OS::LINUX, $bit);
-
-        return self::OS($os);
-    }
-
-    /**
-     * @param int|null $bit
-     *
-     * @return Conditional
-     */
-    public static function OSX(int $bit = null) : Conditional
-    {
-        $bit = $bit === null ? OSInfo::Instance()->getCurrentOS()->getBitAsInt() : $bit;
-        $os  = OS::Instance(OS::OSX, $bit);
-
-        return self::OS($os);
-    }
-
-    /**
-     * @return Conditional
-     */
-    public static function X86() : Conditional
-    {
-        $name = OSInfo::Instance()->getCurrentOS()->getName();
-        $os   = OS::Instance($name, self::X86);
-
-        return self::OS($os);
-    }
-
-    /**
-     * @return Conditional
-     */
-    public static function X86_64() : Conditional
-    {
-        $name = OSInfo::Instance()->getCurrentOS()->getName();
-        $os   = OS::Instance($name, self::X86_64);
-
-        return self::OS($os);
     }
 
     /**
      * @param string $version
      *
-     * @return Conditional
+     * @return Version
      */
-    public static function PHP(string $version) : Conditional
+    public static function Instance(string $version): Version
     {
-        $version = PHPVersion::Instance($version);
+        if (!array_key_exists($version, self::$instances)) {
+            self::$instances[$version] = new self($version);
+        }
 
-        return $version->conditional();
+        return self::$instances[$version];
     }
 
     /**
-     * @param bool $condition
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param string $version
      *
-     * @return Conditional
+     * @return Version
      */
-    public static function Is(bool $condition) : Conditional
+    public function isEqualTo(string $version): Version
     {
-        $version = new BooleanVersion($condition);
+        $this->verified = version_compare($this->version, $version, '==');
 
-        return $version->conditional();
+        return $this;
     }
 
     /**
-     * @return Conditional
-     */
-    public static function Localhost() : Conditional
-    {
-        return self::Is(EnvironmentInfo::Instance()->isOnLocalhost());
-    }
-
-    /**
-     * @return Conditional
-     */
-    public static function Console() : Conditional
-    {
-        return self::Is(EnvironmentInfo::Instance()->isOnConsole());
-    }
-
-    /**
-     * @param string $browser
+     * @param string $version
      *
-     * @return Conditional
+     * @return Version
      */
-    public static function Browser(string $browser) : Conditional
+    public function isNotEqualTo(string $version): Version
     {
-        $version = new BrowserVersion($browser);
+        $this->verified = version_compare($this->version, $version, '!=');
 
-        return $version->conditional();
+        return $this;
     }
 
     /**
-     * @return Conditional
+     * @param string $version
+     *
+     * @return Version
      */
-    public static function Firefox() : Conditional
+    public function isGreaterThan(string $version): Version
     {
-        return self::Browser(Browser::FIREFOX);
+        $this->verified = version_compare($this->version, $version, '>');
+
+        return $this;
     }
 
     /**
-     * @return Conditional
+     * @param string $version
+     *
+     * @return Version
      */
-    public static function MSIE() : Conditional
+    public function isGreaterOrEqualTo(string $version): Version
     {
-        return self::Browser(Browser::MSIE);
+        $this->verified = version_compare($this->version, $version, '>=');
+
+        return $this;
     }
 
     /**
-     * @return Conditional
+     * @param string $version
+     *
+     * @return Version
      */
-    public static function Chrome() : Conditional
+    public function isLowerThan(string $version): Version
     {
-        return self::Browser(Browser::CHROME);
+        $this->verified = version_compare($this->version, $version, '<');
+
+        return $this;
     }
 
     /**
-     * @return Conditional
+     * @param string $version
+     *
+     * @return Version
      */
-    public static function Safari() : Conditional
+    public function isLowerOrEqualTo(string $version): Version
     {
-        return self::Browser(Browser::SAFARI);
+        $this->verified = version_compare($this->version, $version, '<=');
+
+        return $this;
     }
 
     /**
-     * @return Conditional
+     * @return boolean
      */
-    public static function Opera() : Conditional
+    public function isVerified(): bool
     {
-        return self::Browser(Browser::OPERA);
+        return $this->verified;
     }
 
     /**
-     * @return Conditional
+     * @return Version
      */
-    public static function Netscape() : Conditional
+    public function isProduction(): Version
     {
-        return self::Browser(Browser::NETSCAPE);
+        foreach (['dev', 'rc', 'beta', 'alpha'] as $pre) {
+            if (stripos($this->version, $pre) !== false) {
+                $this->verified = false;
+
+                return $this;
+            }
+        }
+
+        $this->verified = true;
+
+        return $this;
     }
 
     /**
-     * @return Conditional
+     * @return Version
      */
-    final public function conditional() : Conditional
+    public function isDevelop(): Version
     {
-        return new Conditional($this);
+        $this->verified = stripos($this->version, 'dev') !== false;
+
+        return $this;
     }
 
     /**
-     * @return bool
+     * @return Version
      */
-    abstract public function isValid() : bool;
-}
+    public function isRC(): Version
+    {
+        $this->verified = stripos($this->version, 'rc') !== false;
 
-/**
- * @param $value
- *
- * @return Conditional
- * @throws NotSupportedException
- */
-function condition($value) : Conditional
-{
-    if (is_bool($value)) {
-        return Version::Is($value);
+        return $this;
     }
 
-    if ($value instanceof OS) {
-        return Version::OS($value);
+    /**
+     * @return Version
+     */
+    public function isBeta(): Version
+    {
+        $this->verified = stripos($this->version, 'beta') !== false;
+
+        return $this;
     }
 
-    if (is_string($value)) {
-        return new Conditional(UserVersion::Instance($value));
+    /**
+     * @return Version
+     */
+    public function isAlpha(): Version
+    {
+        $this->verified = stripos($this->version, 'alpha') !== false;
+
+        return $this;
     }
 
-    throw new NotSupportedException('No match for value ' . $value);
-}
+    /**
+     * @param string $value
+     *
+     * @return Version
+     */
+    public function output(string $value): Version
+    {
+        if ($this->isVerified()) {
+            if (!Enviroment::Instance()->isOnCommandLine()) {
+                print '<pre>';
+            }
 
-/**
- * @param string $label
- *
- * @return UserVersion
- */
-function debug(string $label) : UserVersion
-{
-    return UserVersion::Instance($label);
+            print $value . PHP_EOL;
+
+            if (!Enviroment::Instance()->isOnCommandLine()) {
+                print '</pre>';
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return Version
+     */
+    public function then(callable $callback): Version
+    {
+        if ($this->isVerified()) {
+            $callback($this->version);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return Version
+     */
+    public function otherwise(callable $callback): Version
+    {
+        if (!$this->isVerified()) {
+            $callback($this->version);
+        }
+
+        return $this;
+    }
 }

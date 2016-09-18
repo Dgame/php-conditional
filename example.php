@@ -1,36 +1,28 @@
 <?php
 
-use Dgame\Conditional\Browser;
-use Dgame\Conditional\OS;
-use Dgame\Conditional\Version;
-use Dgame\Conditional\Version\BrowserVersion;
-use function Dgame\Conditional\condition;
+use Dgame\Conditional\Enviroment;
 use function Dgame\Conditional\debug;
+use function Dgame\Conditional\version;
 
 require_once 'vendor/autoload.php';
 
-debug('test')->enable();
-debug('test')->disable();
-debug('test')->enable();
+debug('foo')->enable();
+debug('foo')->output('Hello, foo');
+debug('foo')->then(function(string $label) {
+    print 'Debug of ' . $label . ' is enabled' . PHP_EOL;
+});
 
-condition('test')->output('Hallo');
-condition('test')->output(['foo' => 'bar']);
-condition('test')->output(['bar' => 'foo']);
+version('7.0.8')->isEqualTo(PHP_VERSION)->output('Hello PHP 7');
+version('7')->isLowerOrEqualTo(PHP_VERSION)->then(function(string $version) {
+    print 'Version ' . $version . ' is verified' . PHP_EOL;
+});
 
-condition(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
-condition(OS::Is('Linux'))->output('Linux')->otherwise()->output('Not Linux.');
-Version::Windows()->output('Predefined: Windows');
-Version::Localhost()->output('you are on localhost');
-Version::Console()->output('you are on a console');
-Version::X86()->output('32 bit');
-Version::X86_64()->output('64 bit');
-condition(OS::Is('Windows', Version::X86))->output('Windows, 32 Bit');
-Version::Windows(Version::X86)->output('Predefined: Windows, 32 Bit');
-Version::PHP('7.*')->output('You are on PHP 7');
-condition(true)->output('always debug this');
-condition(false)->output('never debug this');
+version('7.0.9')->isEqualTo(PHP_VERSION)->output('Production')->otherwise(function(string $version) {
+    print $version . ' does not match ' . PHP_VERSION . PHP_EOL;
+});
 
-Version::Chrome()->output('You are on Chrome');
+version('7.1.0alpha2')->isProduction()->output('Production');
 
-$bv = new BrowserVersion(Browser::CHROME);
-$bv->version('49')->conditional()->output('You are on Chrome 49');
+Enviroment::CLI()->output('We are on the command line');
+Enviroment::Local()->output('We are on the localhost');
+Enviroment::Windows()->output('We are on Windows');

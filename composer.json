@@ -30,7 +30,7 @@
             "src/"
         ],
         "files": [
-            "src/Version.php"
+            "src/functions.php"
         ],
         "psr-4": {
             "Dgame\\Conditional\\": "src/"
