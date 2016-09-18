@@ -2,53 +2,49 @@
 
 ## enjoy conditional php-programming
 
-enable or disable user defined debug-versions
 ```php
-debug('test')->enable();
-debug('test')->disable();
-```
+<?php
 
-and use them. If the specific debug-version is enabled, you'll see the output
+use Dgame\Conditional\Enviroment;
+use function Dgame\Conditional\debug;
+use function Dgame\Conditional\version;
 
-```php
-condition('test')->output('Hallo');
-condition('test')->output(['foo' => 'bar']);
-condition('test')->output(['bar' => 'foo']);
-```
+require_once 'vendor/autoload.php';
 
-But you can also use predefined versions for different OS or to determine if you are currently on your localhost or a console
-```php
-Version::Windows()->output('Predefined: Windows');
-Version::Localhost()->output('you are on localhost');
-Version::Console()->output('you are on a console');
-Version::X86()->output('32 bit');
-Version::X86_64()->output('64 bit');
-condition(OS::Is('Windows', Version::X86))->output('Windows, 32 Bit');
-Version::Windows(Version::X86)->output('Predefined: Windows, 32 Bit');
-Version::PHP('7.*')->output('You are on PHP 7');
-```
+debug('foo')->enable();
+debug('foo')->output('Hello, foo');
+debug('foo')->then(function(string $label) {
+    print 'Debug of ' . $label . ' is enabled' . PHP_EOL;
+});
 
-you can also use an optional else-part, just in case:
-```php
-condition(OS::Is('Windows'))->output('Windows')->otherwise()->output('Not Windows.');
-```
+version('7.0.8')->isEqualTo(PHP_VERSION)->output('Hello PHP 7');
+version('7')->isLowerOrEqualTo(PHP_VERSION)->then(function(string $version) {
+    print 'Version ' . $version . ' is verified' . PHP_EOL;
+});
 
-and you can use `condition` with boolean-conditions
+version('7.0.9')->isEqualTo(PHP_VERSION)->output('Production')->otherwise(function(string $version) {
+    print $version . ' does not match ' . PHP_VERSION . PHP_EOL;
+});
 
-```php
-condition(true)->output('always debug this');
-condition(false)->output('never debug this');
-```
+//debug('foo')->output('This is 100% the end')->abort();
+//debug('foo')->output('This may be the end')->abortIf(!isset($result));
 
-## Browser detection
+version('7.1.0alpha2')->isProduction()->output('Production');
 
-Detect your current Browser (if any)
-```php
-Version::Chrome()->output('You are on Chrome');
-```
+Enviroment::CLI()->output('We are on the command line');
+Enviroment::Local()->output('We are on the localhost');
+Enviroment::Windows()->output('We are on Windows');
 
-or a bit more specific -  with the browser version
-```php
-$bv = new BrowserVersion(Browser::CHROME);
-$bv->version('49')->conditional()->output('You are on Chrome 49');
+class FooBar
+{
+    public function test(string $label, string $note)
+    {
+        print __METHOD__ . ' [' . $label . '] : ' . $note . PHP_EOL;
+    }
+}
+
+$fb = new FooBar();
+
+debug('bar')->enable();
+debug('bar')->then([$fb, 'test'], 'yay');
 ```
