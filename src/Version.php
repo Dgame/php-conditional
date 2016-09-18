@@ -222,13 +222,14 @@ final class Version
 
     /**
      * @param callable $callback
+     * @param array    ...$args
      *
      * @return Version
      */
-    public function then(callable $callback): Version
+    public function then(callable $callback, ...$args): Version
     {
         if ($this->isVerified()) {
-            $callback($this->version);
+            $callback($this->version, ...$args);
         }
 
         return $this;
@@ -236,13 +237,14 @@ final class Version
 
     /**
      * @param callable $callback
+     * @param array    ...$args
      *
      * @return Version
      */
-    public function otherwise(callable $callback): Version
+    public function otherwise(callable $callback, ...$args): Version
     {
         if (!$this->isVerified()) {
-            $callback($this->version);
+            $callback($this->version, ...$args);
         }
 
         return $this;

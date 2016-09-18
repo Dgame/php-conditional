@@ -143,14 +143,35 @@ final class Debug
     }
 
     /**
+     *
+     */
+    public function abort()
+    {
+        if ($this->isEnabled()) {
+            exit;
+        }
+    }
+
+    /**
+     *
+     */
+    public function abortIf(bool $conditon)
+    {
+        if ($conditon) {
+            $this->abort();
+        }
+    }
+
+    /**
      * @param callable $callback
+     * @param array    ...$args
      *
      * @return Debug
      */
-    public function then(callable $callback): Debug
+    public function then(callable $callback, ...$args): Debug
     {
         if ($this->isEnabled()) {
-            $callback($this->label);
+            $callback($this->label, ...$args);
         }
 
         return $this;
@@ -158,13 +179,14 @@ final class Debug
 
     /**
      * @param callable $callback
+     * @param array    ...$args
      *
      * @return Debug
      */
-    public function otherwise(callable $callback): Debug
+    public function otherwise(callable $callback, ...$args): Debug
     {
         if ($this->isDisabled()) {
-            $callback($this->label);
+            $callback($this->label, ...$args);
         }
 
         return $this;

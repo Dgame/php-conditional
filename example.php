@@ -21,8 +21,24 @@ version('7.0.9')->isEqualTo(PHP_VERSION)->output('Production')->otherwise(functi
     print $version . ' does not match ' . PHP_VERSION . PHP_EOL;
 });
 
+//debug('foo')->output('This is 100% the end')->abort();
+//debug('foo')->output('This may be the end')->abortIf(!isset($result));
+
 version('7.1.0alpha2')->isProduction()->output('Production');
 
 Enviroment::CLI()->output('We are on the command line');
 Enviroment::Local()->output('We are on the localhost');
 Enviroment::Windows()->output('We are on Windows');
+
+class FooBar
+{
+    public function test(string $label, string $note)
+    {
+        print __METHOD__ . ' [' . $label . '] : ' . $note . PHP_EOL;
+    }
+}
+
+$fb = new FooBar();
+
+debug('bar')->enable();
+debug('bar')->then([$fb, 'test'], 'yay');
