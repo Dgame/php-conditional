@@ -9,10 +9,6 @@ namespace Dgame\Conditional;
 final class Version
 {
     /**
-     * @var Version[]
-     */
-    private static $instances = [];
-    /**
      * @var string
      */
     private $version;
@@ -26,30 +22,9 @@ final class Version
      *
      * @param string $version
      */
-    private function __construct(string $version)
+    public function __construct(string $version)
     {
         $this->version = $version;
-    }
-
-    /**
-     *
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public static function Instance(string $version): Version
-    {
-        if (!array_key_exists($version, self::$instances)) {
-            self::$instances[$version] = new self($version);
-        }
-
-        return self::$instances[$version];
     }
 
     /**
@@ -58,6 +33,56 @@ final class Version
     public function getVersion(): string
     {
         return $this->version;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBelow(): bool
+    {
+        $this->verified = version_compare($this->version, PHP_VERSION, '<');
+
+        return $this->verified;
+    }
+
+    /**
+     * @return bool
+     */
+    public function orBelow(): bool
+    {
+        $this->verified = version_compare($this->version, PHP_VERSION, '<=');
+
+        return $this->verified;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAbove(): bool
+    {
+        $this->verified = version_compare($this->version, PHP_VERSION, '>');
+
+        return $this->verified;
+    }
+
+    /**
+     * @return bool
+     */
+    public function orAbove(): bool
+    {
+        $this->verified = version_compare($this->version, PHP_VERSION, '>=');
+
+        return $this->verified;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExact(): bool
+    {
+        $this->verified = version_compare($this->version, PHP_VERSION, '==');
+
+        return $this->verified;
     }
 
     /**

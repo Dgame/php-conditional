@@ -19,5 +19,5 @@ function debug(string $label): Debug
  */
 function version(string $version): Version
 {
-    return Version::Instance($version);
+    return new Version($version);
 }

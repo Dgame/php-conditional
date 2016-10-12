@@ -132,10 +132,12 @@ final class Debug
                 print '<pre>';
             }
 
-            print $value . PHP_EOL;
+            print $value;
 
             if (!Enviroment::Instance()->isOnCommandLine()) {
                 print '</pre>';
+            } else {
+                print PHP_EOL;
             }
         }
 
