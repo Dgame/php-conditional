@@ -225,14 +225,19 @@ final class Version
 
     /**
      * @param string $value
+     * @param array  ...$args
      *
      * @return Version
      */
-    public function output(string $value): Version
+    public function output(string $value, ...$args): Version
     {
         if ($this->isVerified()) {
             if (!Enviroment::Instance()->isOnCommandLine()) {
                 print '<pre>';
+            }
+
+            if (!empty($args)) {
+                $value = sprintf($value, ...$args);
             }
 
             print $value . PHP_EOL;

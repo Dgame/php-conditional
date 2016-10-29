@@ -122,14 +122,19 @@ final class Debug
 
     /**
      * @param string $value
+     * @param array  ...$args
      *
      * @return Debug
      */
-    public function output(string $value): Debug
+    public function output(string $value, ...$args): Debug
     {
         if ($this->isEnabled()) {
             if (!Enviroment::Instance()->isOnCommandLine()) {
                 print '<pre>';
+            }
+
+            if (!empty($args)) {
+                $value = sprintf($value, ...$args);
             }
 
             print $value;
