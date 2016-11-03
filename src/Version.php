@@ -232,7 +232,7 @@ final class Version
     public function output(string $value, ...$args): Version
     {
         if ($this->isVerified()) {
-            if (!Enviroment::Instance()->isOnCommandLine()) {
+            if (PHP_SAPI !== 'cli') {
                 print '<pre>';
             }
 
@@ -242,7 +242,7 @@ final class Version
 
             print $value . PHP_EOL;
 
-            if (!Enviroment::Instance()->isOnCommandLine()) {
+            if (PHP_SAPI !== 'cli') {
                 print '</pre>';
             }
         }

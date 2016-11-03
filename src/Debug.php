@@ -129,7 +129,7 @@ final class Debug
     public function output(string $value, ...$args): Debug
     {
         if ($this->isEnabled()) {
-            if (!Enviroment::Instance()->isOnCommandLine()) {
+            if (PHP_SAPI !== 'cli') {
                 print '<pre>';
             }
 
@@ -139,7 +139,7 @@ final class Debug
 
             print $value;
 
-            if (!Enviroment::Instance()->isOnCommandLine()) {
+            if (PHP_SAPI !== 'cli') {
                 print '</pre>';
             } else {
                 print PHP_EOL;

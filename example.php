@@ -1,6 +1,5 @@
 <?php
 
-use Dgame\Conditional\Enviroment;
 use function Dgame\Conditional\debug;
 use function Dgame\Conditional\version;
 
@@ -25,10 +24,6 @@ version('7.0.9')->isEqualTo(PHP_VERSION)->output('Production')->otherwise(functi
 //debug('foo')->output('This may be the end')->abortIf(!isset($result));
 
 version('7.1.0alpha2')->isProduction()->output('Production');
-
-Enviroment::CLI()->output('We are on the command line');
-Enviroment::Local()->output('We are on the localhost');
-Enviroment::Windows()->output('We are on Windows');
 
 class FooBar
 {
