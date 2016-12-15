@@ -129,21 +129,7 @@ final class Debug
     public function output(string $value, ...$args): Debug
     {
         if ($this->isEnabled()) {
-            if (PHP_SAPI !== 'cli') {
-                print '<pre>';
-            }
-
-            if (!empty($args)) {
-                $value = sprintf($value, ...$args);
-            }
-
-            print $value;
-
-            if (PHP_SAPI !== 'cli') {
-                print '</pre>';
-            } else {
-                print PHP_EOL;
-            }
+            println($value, ...$args);
         }
 
         return $this;
@@ -160,7 +146,7 @@ final class Debug
     }
 
     /**
-     *
+     * @param bool $conditon
      */
     public function abortIf(bool $conditon)
     {

@@ -232,19 +232,7 @@ final class Version
     public function output(string $value, ...$args): Version
     {
         if ($this->isVerified()) {
-            if (PHP_SAPI !== 'cli') {
-                print '<pre>';
-            }
-
-            if (!empty($args)) {
-                $value = sprintf($value, ...$args);
-            }
-
-            print $value . PHP_EOL;
-
-            if (PHP_SAPI !== 'cli') {
-                print '</pre>';
-            }
+            println($value, ...$args);
         }
 
         return $this;
