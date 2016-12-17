@@ -31,7 +31,7 @@ final class OS
     /**
      * @return StringWrapper
      */
-    private function os(): StringWrapper
+    private function osName(): StringWrapper
     {
         static $object = null;
         if ($object === null) {
@@ -47,7 +47,7 @@ final class OS
      */
     public static function isWindows(): bool
     {
-        return self::os()->beginsWith('win');
+        return self::osName()->beginsWith('win');
     }
 
     /**
@@ -55,7 +55,7 @@ final class OS
      */
     public static function isLinux(): bool
     {
-        return self::os()->beginsWith('linux');
+        return self::osName()->beginsWith('linux');
     }
 
     /**
@@ -63,7 +63,7 @@ final class OS
      */
     public static function isUnix(): bool
     {
-        return self::os()->beginsWith('unix');
+        return self::osName()->beginsWith('unix');
     }
 
     /**
@@ -71,7 +71,7 @@ final class OS
      */
     public static function isCygwin(): bool
     {
-        return self::os()->beginsWith('cygwin');
+        return self::osName()->beginsWith('cygwin');
     }
 
     /**
@@ -79,7 +79,7 @@ final class OS
      */
     public static function isMingw(): bool
     {
-        return self::os()->beginsWith('mingw');
+        return self::osName()->beginsWith('mingw');
     }
 
     /**
@@ -87,7 +87,7 @@ final class OS
      */
     public static function isMacOSX(): bool
     {
-        return self::os()->beginsWith('darwin');
+        return self::osName()->beginsWith('darwin');
     }
 
     /**
@@ -95,7 +95,7 @@ final class OS
      */
     public static function isSolaris(): bool
     {
-        return self::os()->beginsWith('sun');
+        return self::osName()->beginsWith('sun');
     }
 
     /**
@@ -103,6 +103,6 @@ final class OS
      */
     public static function isBSD(): bool
     {
-        return self::os()->beginsWith('openbsd') || self::os()->beginsWith('freebsd') || self::os()->beginsWith('netbsd');
+        return self::osName()->beginsWith('openbsd') || self::osName()->beginsWith('freebsd') || self::osName()->beginsWith('netbsd');
     }
 }
