@@ -31,162 +31,19 @@ final class OS
     const AIX      = 0x10000;
 
     /**
-     * @var int
+     * @return bool
      */
-    private $os = 0;
-    /**
-     * @var int
-     */
-    private $family = 0;
-
-    /**
-     * OS constructor.
-     */
-    public function __construct()
+    public static function isWindowsLike(): bool
     {
-        $info = self::detect();
-        if (!empty($info)) {
-            $this->os     = (int) $info['os'];
-            $this->family = (int) $info['family'];
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getOs(): int
-    {
-        return $this->os;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFamily(): int
-    {
-        return $this->family;
+        return self::isWindows() || self::isCygwin() || self::isMingw();
     }
 
     /**
      * @return bool
      */
-    public function isWindowsLike(): bool
+    public static function isUnixLike(): bool
     {
-        return $this->family === self::WINDOWS_FAMILY;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUnixLike(): bool
-    {
-        return $this->family === self::UNIX_FAMILY;
-    }
-
-    /**
-     * @return array
-     */
-    public static function detect(): array
-    {
-        if (self::isWindows()) {
-            return [
-                'os'     => self::WINDOWS,
-                'family' => self::WINDOWS_FAMILY
-            ];
-        }
-
-        if (self::isCygwin()) {
-            return [
-                'os'     => self::CYGWIN,
-                'family' => self::UNIX_ON_WINDOWS_FAMILY
-            ];
-        }
-
-        if (self::isMingw()) {
-            return [
-                'os'     => self::MSYS,
-                'family' => self::UNIX_ON_WINDOWS_FAMILY
-            ];
-        }
-
-        if (self::isMacOSX()) {
-            return [
-                'os'     => self::MAC_OSX,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isLinux()) {
-            return [
-                'os'     => self::LINUX,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isAix()) {
-            return [
-                'os'     => self::AIX,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isZOS()) {
-            return [
-                'os'     => self::ZOS,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isHPUX()) {
-            return [
-                'os'     => self::HP_UX,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isSolaris()) {
-            return [
-                'os'     => self::SUN_OS,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isBSD()) {
-            return [
-                'os'     => self::BSD,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isGenUnix()) {
-            return [
-                'os'     => self::GEN_UNIX,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isQNX()) {
-            return [
-                'os'     => self::QNX,
-                'family' => self::UNIX_FAMILY
-            ];
-        }
-
-        if (self::isBeOS()) {
-            return [
-                'os'     => self::BE_OS,
-                'family' => self::OTHER_FAMILY
-            ];
-        }
-
-        if (self::isNonStop()) {
-            return [
-                'os'     => self::NONSTOP,
-                'family' => self::OTHER_FAMILY
-            ];
-        }
-
-        return [];
+        return !self::isWindowsLike() && !self::isNonStop();
     }
 
     /**
