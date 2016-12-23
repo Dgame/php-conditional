@@ -1,5 +1,7 @@
 # php-conditional
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Dgame/php-conditional/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Dgame/php-conditional/?branch=master)
+
 ## enjoy conditional php-programming
 
 ```php
