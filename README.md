@@ -2,6 +2,8 @@
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Dgame/php-conditional/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Dgame/php-conditional/?branch=master)
 
+[![Build Status](https://travis-ci.org/Dgame/php-conditional.svg?branch=master)](https://travis-ci.org/Dgame/php-conditional)
+
 ## enjoy conditional php-programming
 
 ```php
