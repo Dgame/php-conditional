@@ -23,28 +23,22 @@ function version(string $version): Version
 }
 
 /**
- * @param       $value
- * @param array ...$args
+ * @param string $value
+ * @param array  ...$args
  */
-function println($value, ...$args)
+function println(string $value, ...$args)
 {
-    if (PHP_SAPI !== 'cli') {
-        print '<pre>';
-    }
-
-    if (is_array($value) || is_object($value)) {
-        print_r($value);
-    } else {
-        if (!empty($args)) {
-            $value = sprintf($value, ...$args);
-        }
-
-        print $value;
+    if (!empty($args)) {
+        $value = sprintf($value, ...$args);
     }
 
     if (PHP_SAPI !== 'cli') {
-        print '</pre>';
-    } else {
+        $value = sprintf('<pre>%s</pre>', $value);
+    }
+
+    print $value;
+
+    if (PHP_SAPI === 'cli') {
         print PHP_EOL;
     }
 }
