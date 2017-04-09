@@ -2,20 +2,18 @@
 
 namespace Dgame\Conditional;
 
+use Composer\Semver\Comparator;
+
 /**
  * Class Version
  * @package Dgame\Conditional
  */
-final class Version
+class Version
 {
     /**
      * @var string
      */
     private $version;
-    /**
-     * @var bool
-     */
-    private $verified = false;
 
     /**
      * Debug constructor.
@@ -36,235 +34,108 @@ final class Version
     }
 
     /**
+     * @param string $version
+     *
      * @return bool
      */
-    public function isBelow(): bool
+    public function isEqualTo(string $version): bool
     {
-        $this->verified = version_compare($this->version, PHP_VERSION, '<');
+        return Comparator::equalTo($this->version, $version);
+    }
 
-        return $this->verified;
+    /**
+     * @param string $version
+     *
+     * @return bool
+     */
+    public function isNotEqualTo(string $version): bool
+    {
+        return Comparator::notEqualTo($this->version, $version);
+    }
+
+    /**
+     * @param string $version
+     *
+     * @return bool
+     */
+    public function isGreaterThan(string $version): bool
+    {
+        return Comparator::greaterThan($this->version, $version);
+    }
+
+    /**
+     * @param string $version
+     *
+     * @return bool
+     */
+    public function isGreaterOrEqualTo(string $version): bool
+    {
+        return Comparator::greaterThanOrEqualTo($this->version, $version);
+    }
+
+    /**
+     * @param string $version
+     *
+     * @return bool
+     */
+    public function isLowerThan(string $version): bool
+    {
+        return Comparator::lessThan($this->version, $version);
+    }
+
+    /**
+     * @param string $version
+     *
+     * @return bool
+     */
+    public function isLowerOrEqualTo(string $version): bool
+    {
+        return Comparator::lessThanOrEqualTo($this->version, $version);
     }
 
     /**
      * @return bool
      */
-    public function orBelow(): bool
-    {
-        $this->verified = version_compare($this->version, PHP_VERSION, '<=');
-
-        return $this->verified;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAbove(): bool
-    {
-        $this->verified = version_compare($this->version, PHP_VERSION, '>');
-
-        return $this->verified;
-    }
-
-    /**
-     * @return bool
-     */
-    public function orAbove(): bool
-    {
-        $this->verified = version_compare($this->version, PHP_VERSION, '>=');
-
-        return $this->verified;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isExact(): bool
-    {
-        $this->verified = version_compare($this->version, PHP_VERSION, '==');
-
-        return $this->verified;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public function isEqualTo(string $version): Version
-    {
-        $this->verified = version_compare($this->version, $version, '==');
-
-        return $this;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public function isNotEqualTo(string $version): Version
-    {
-        $this->verified = version_compare($this->version, $version, '!=');
-
-        return $this;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public function isGreaterThan(string $version): Version
-    {
-        $this->verified = version_compare($this->version, $version, '>');
-
-        return $this;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public function isGreaterOrEqualTo(string $version): Version
-    {
-        $this->verified = version_compare($this->version, $version, '>=');
-
-        return $this;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public function isLowerThan(string $version): Version
-    {
-        $this->verified = version_compare($this->version, $version, '<');
-
-        return $this;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return Version
-     */
-    public function isLowerOrEqualTo(string $version): Version
-    {
-        $this->verified = version_compare($this->version, $version, '<=');
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isVerified(): bool
-    {
-        return $this->verified;
-    }
-
-    /**
-     * @return Version
-     */
-    public function isProduction(): Version
+    public function isInProduction(): bool
     {
         foreach (['dev', 'rc', 'beta', 'alpha'] as $pre) {
             if (stripos($this->version, $pre) !== false) {
-                $this->verified = false;
-
-                return $this;
+                return false;
             }
         }
 
-        $this->verified = true;
-
-        return $this;
+        return true;
     }
 
     /**
-     * @return Version
+     * @return bool
      */
-    public function isDevelop(): Version
+    public function isInDevelop(): bool
     {
-        $this->verified = stripos($this->version, 'dev') !== false;
-
-        return $this;
+        return stripos($this->version, 'dev') !== false;
     }
 
     /**
-     * @return Version
+     * @return bool
      */
-    public function isRC(): Version
+    public function isRC(): bool
     {
-        $this->verified = stripos($this->version, 'rc') !== false;
-
-        return $this;
+        return stripos($this->version, 'rc') !== false;
     }
 
     /**
-     * @return Version
+     * @return bool
      */
-    public function isBeta(): Version
+    public function isBeta(): bool
     {
-        $this->verified = stripos($this->version, 'beta') !== false;
-
-        return $this;
+        return stripos($this->version, 'beta') !== false;
     }
 
     /**
-     * @return Version
+     * @return bool
      */
-    public function isAlpha(): Version
+    public function isAlpha(): bool
     {
-        $this->verified = stripos($this->version, 'alpha') !== false;
-
-        return $this;
-    }
-
-    /**
-     * @param string $value
-     * @param array  ...$args
-     *
-     * @return Version
-     */
-    public function output(string $value, ...$args): Version
-    {
-        if ($this->isVerified()) {
-            println($value, ...$args);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param callable $callback
-     * @param array    ...$args
-     *
-     * @return Version
-     */
-    public function then(callable $callback, ...$args): Version
-    {
-        if ($this->isVerified()) {
-            $callback($this->version, ...$args);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param callable $callback
-     * @param array    ...$args
-     *
-     * @return Version
-     */
-    public function otherwise(callable $callback, ...$args): Version
-    {
-        if (!$this->isVerified()) {
-            $callback($this->version, ...$args);
-        }
-
-        return $this;
+        return stripos($this->version, 'alpha') !== false;
     }
 }

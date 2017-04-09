@@ -23,6 +23,16 @@ function version(string $version): Version
 }
 
 /**
+ * @param string $version
+ *
+ * @return PHPVersion
+ */
+function versionPHP(string $version = PHP_VERSION): PHPVersion
+{
+    return new PHPVersion($version);
+}
+
+/**
  * @param string $value
  * @param array  ...$args
  */
